@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5ef">
+  <meta name="description" content="Finde passende Rezepte, verwalte deinen Vorrat und plane deinen Einkauf.">
+  <title>Was kochen wir heute?</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Was kochen wir heute – Startseite">
+        <span class="brand-icon" aria-hidden="true">🍋</span>
+        <span class="brand-copy"><strong>Was kochen wir heute?</strong><small>Gut essen. Weniger verschwenden.</small></span>
+      </a>
+      <div class="top-actions">
+        <span class="local-badge"><span class="status-dot"></span> Deine Küche</span>
+        <button class="icon-btn" id="resetDemo" type="button" title="Demo-Daten zurücksetzen" aria-label="Demo-Daten zurücksetzen">↻</button>
+      </div>
+    </header>
+
+    <nav class="main-nav" aria-label="Hauptnavigation">
+      <button class="nav-item active" data-view="discover" type="button"><span>✦</span> Entdecken</button>
+      <button class="nav-item" data-view="pantry" type="button"><span>🥕</span> Mein Vorrat</button>
+      <button class="nav-item" data-view="shopping" type="button"><span>🛒</span> Einkaufsliste <b class="nav-count" id="shoppingCount">0</b></button>
+      <button class="nav-item" data-view="saved" type="button"><span>♡</span> Merkliste <b class="nav-count" id="savedCount">0</b></button>
+    </nav>
+
+    <main>
+      <section class="view active" id="view-discover">
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">DEINE KÜCHENINSPIRATION</p>
+            <h1>Was kommt heute<br><em>auf den Tisch?</em></h1>
+            <p>Entdecke leckere Ideen – am besten mit dem, was du schon zu Hause hast.</p>
+            <div class="hero-stats">
+              <span>🥬 Weniger Reste</span><span>⏱ Schnelle Ideen</span><span>♡ Deine Favoriten</span>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true"><span class="art-sun"></span><span class="art-food">🥑</span><span class="art-leaf">✦</span></div>
+        </div>
+
+        <div class="section-heading">
+          <div><p class="eyebrow">DEIN NÄCHSTES LIEBLINGSGERICHT</p><h2>Finde dein Feierabendessen</h2></div>
+          <span class="result-label" id="recipeResultCount">Rezepte entdecken</span>
+        </div>
+
+        <div class="filter-bar">
+          <label class="search-field"><span aria-hidden="true">⌕</span><input id="recipeSearch" type="search" placeholder="Gericht oder Zutat suchen…" autocomplete="off"></label>
+          <select id="dietFilter" aria-label="Rezepte filtern">
+            <option value="all">Alle Gerichte</option>
+            <option value="vegetarian">Vegetarisch</option>
+            <option value="vegan">Vegan</option>
+            <option value="quick">Unter 25 Minuten</option>
+            <option value="pantry">Passt zu meinem Vorrat</option>
+          </select>
+        </div>
+
+        <div class="discover-grid">
+          <div class="swipe-area">
+            <article class="recipe-card" id="recipeCard">
+              <div class="recipe-photo" id="recipePhoto">
+                <span class="photo-emoji" id="recipeEmoji">🍝</span>
+                <span class="photo-chip" id="recipeChip">VORRATS-LIEBLING</span>
+                <button class="photo-save" id="photoSave" type="button" aria-label="Rezept merken" title="Rezept merken">♡</button>
+              </div>
+              <div class="recipe-card-body">
+                <div class="recipe-meta"><span id="recipeTime">⏱ 20 Min.</span><span id="recipeDiet">🌱 Vegetarisch</span></div>
+                <h3 id="recipeTitle">Cremige Tomaten-Pasta</h3>
+                <p id="recipeDescription">Ein unkompliziertes Wohlfühlgericht mit wenigen Zutaten.</p>
+                <div class="match-box"><div class="match-top"><span>Dein Vorrat passt</span><strong id="matchText">3 von 5 Zutaten</strong></div><div class="match-track"><span id="matchBar" style="width:60%"></span></div></div>
+                <div class="ingredient-preview" id="ingredientPreview"></div>
+                <button class="btn btn-dark btn-wide" id="viewRecipe" type="button">Rezept ansehen <span>↗</span></button>
+              </div>
+            </article>
+            <div class="swipe-controls">
+              <button class="round-action reject" id="rejectRecipe" type="button" aria-label="Nicht interessiert" title="Nicht interessiert">✕</button>
+              <span>Wische oder wähle aus</span>
+              <button class="round-action accept" id="acceptRecipe" type="button" aria-label="Rezept merken" title="Rezept merken">♥</button>
+            </div>
+            <div class="swipe-hint"><span>← Nicht meins</span><span>Gefällt mir →</span></div>
+          </div>
+          <aside class="side-panel">
+            <div class="panel-title"><span class="panel-icon">🥕</span><div><h3>Dein Vorrat, deine Ideen</h3><p>Kochen mit dem, was da ist.</p></div></div>
+            <div class="pantry-mini" id="pantryMini"></div>
+            <button class="btn btn-light btn-wide" data-goto="pantry" type="button">Vorrat verwalten <span>→</span></button>
+            <div class="tip-card"><span>💡</span><div><strong>Weniger wegwerfen</strong><p>Gerichte, die deine vorhandenen Zutaten nutzen, helfen dir beim Aufbrauchen.</p></div></div>
+          </aside>
+        </div>
+        <div class="section-heading lower-heading"><div><p class="eyebrow">SCHON MAL VORMERKEN</p><h2>Weitere Ideen für dich</h2></div></div>
+        <div class="mini-recipe-grid" id="moreRecipes"></div>
+      </section>
+
+      <section class="view" id="view-pantry">
+        <div class="page-intro"><p class="eyebrow">WAS IST NOCH DA?</p><h1>Mein <em>Vorrat</em></h1><p>Trage ein, was du zu Hause hast. Wir vergleichen deine Lebensmittel mit den Rezepten.</p></div>
+        <div class="content-card">
+          <form id="pantryForm" class="add-form">
+            <label class="field-grow"><span>Lebensmittel</span><input id="pantryName" required maxlength="70" placeholder="z. B. Tomaten, Nudeln, Eier"></label>
+            <label class="field-quantity"><span>Menge (optional)</span><input id="pantryAmount" maxlength="30" placeholder="z. B. 4 Stück"></label>
+            <button class="btn btn-green" type="submit">＋ Hinzufügen</button>
+          </form>
+          <div class="list-toolbar"><div><h2>Deine Lebensmittel</h2><p id="pantrySubtitle">Dein Vorrat auf einen Blick.</p></div><label class="compact-search"><span>⌕</span><input id="pantrySearch" type="search" placeholder="Suchen…"></label></div>
+          <div class="pantry-list" id="pantryList"></div>
+          <div class="empty-state hidden" id="pantryEmpty"><span>🥬</span><h3>Dein Vorrat wartet auf dich</h3><p>Füge ein paar Lebensmittel hinzu, damit wir passendere Rezepte finden können.</p></div>
+        </div>
+        <div class="note-banner"><span>🌱</span><p><strong>Kleiner Tipp:</strong> Auch wenn du keine genaue Menge kennst, kannst du ein Lebensmittel eintragen. Die App berücksichtigt es dann bei den Rezeptvorschlägen.</p></div>
+      </section>
+
+      <section class="view" id="view-shopping">
+        <div class="page-intro"><p class="eyebrow">ALLES AUF EINEM ZETTEL</p><h1>Deine <em>Einkaufsliste</em></h1><p>Fehlende Rezeptzutaten und alles, was du sonst noch brauchst – an einem Ort.</p></div>
+        <div class="content-card">
+          <form id="shoppingForm" class="add-form">
+            <label class="field-grow"><span>Was brauchst du?</span><input id="shoppingName" required maxlength="100" placeholder="z. B. Milch, Brot oder Waschmittel"></label>
+            <label class="field-quantity"><span>Menge (optional)</span><input id="shoppingAmount" maxlength="30" placeholder="z. B. 1 Packung"></label>
+            <button class="btn btn-green" type="submit">＋ Hinzufügen</button>
+          </form>
+          <div class="shopping-summary"><div><span class="summary-number" id="openShoppingCount">0</span><span>noch zu besorgen</span></div><div><span class="summary-number" id="doneShoppingCount">0</span><span>erledigt</span></div><button class="text-button" id="clearDone" type="button">Erledigte löschen</button></div>
+          <div class="shopping-list" id="shoppingList"></div>
+          <div class="empty-state hidden" id="shoppingEmpty"><span>🛒</span><h3>Deine Liste ist noch leer</h3><p>Füge Artikel selbst hinzu oder übernimm fehlende Zutaten direkt aus einem Rezept.</p><button class="btn btn-light" data-goto="discover" type="button">Rezepte entdecken</button></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-saved">
+        <div class="page-intro"><p class="eyebrow">FÜR SPÄTER AUFHEBEN</p><h1>Deine <em>Merkliste</em></h1><p>Hier findest du Rezepte, die du ausprobieren möchtest, und deine bisherigen Koch-Erfahrungen.</p></div>
+        <div class="saved-tabs"><button class="saved-tab active" data-saved-filter="saved" type="button">Vorgemerkt <span id="savedTabCount">0</span></button><button class="saved-tab" data-saved-filter="cooked" type="button">Schon gekocht</button></div>
+        <div class="saved-grid" id="savedGrid"></div>
+        <div class="empty-state hidden standalone-empty" id="savedEmpty"><span>♡</span><h3>Hier ist noch Platz für Lieblingsrezepte</h3><p>Merke dir ein Rezept, indem du auf das Herz tippst oder die Karte nach rechts wischst.</p><button class="btn btn-dark" data-goto="discover" type="button">Rezepte entdecken</button></div>
+      </section>
+    </main>
+
+    <footer><span>🍋 Was kochen wir heute?</span><span>Deine Küche, deine Ideen.</span></footer>
+  </div>
+
+  <div class="modal-backdrop hidden" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="recipe-modal">
+      <button class="modal-close" id="closeModal" type="button" aria-label="Rezept schließen">×</button>
+      <div class="modal-hero" id="modalHero"><span id="modalEmoji">🍝</span></div>
+      <div class="modal-content">
+        <div class="recipe-meta"><span id="modalTime">⏱ 20 Min.</span><span id="modalDiet">🌱 Vegetarisch</span><span id="modalDifficulty">Einfach</span></div>
+        <h2 id="modalTitle">Rezeptname</h2>
+        <p class="modal-description" id="modalDescription"></p>
+        <div class="portion-row"><div><strong>Zutaten</strong><small>Passe die Portionen an.</small></div><div class="portion-stepper"><button id="portionMinus" type="button" aria-label="Portionen verringern">−</button><strong id="portionValue">2 Portionen</strong><button id="portionPlus" type="button" aria-label="Portionen erhöhen">＋</button></div></div>
+        <div class="modal-columns"><section><h3>Das brauchst du</h3><div id="modalIngredients" class="modal-ingredients"></div><div class="missing-box" id="missingBox"></div><button class="btn btn-green btn-wide" id="addMissing" type="button">Fehlende Zutaten hinzufügen</button></section><section><h3>So geht's</h3><ol id="modalSteps" class="steps-list"></ol></section></div>
+        <div class="cook-actions"><button class="btn btn-dark" id="markCooked" type="button">✓ Als gekocht markieren</button><button class="btn btn-light" id="toggleSaved" type="button">♡ Merken</button></div>
+        <section class="review-section"><div><h3>Wie hat es dir geschmeckt?</h3><p>Deine Bewertung hilft dir, gute Rezepte wiederzufinden.</p></div><div class="rating-buttons"><button id="thumbUp" type="button" aria-label="Hat mir geschmeckt">👍</button><button id="thumbDown" type="button" aria-label="Hat mir nicht geschmeckt">👎</button></div></section>
+        <label class="notes-field"><span>Deine persönliche Notiz</span><textarea id="recipeNote" rows="3" maxlength="1000" placeholder="z. B. Beim nächsten Mal etwas mehr würzen…"></textarea></label>
+        <button class="btn btn-light btn-wide" id="saveNote" type="button">Notiz speichern</button>
+        <p class="inline-status" id="modalStatus" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
